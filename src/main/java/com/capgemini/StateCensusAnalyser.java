@@ -20,10 +20,16 @@ public class StateCensusAnalyser {
 			while (IndiaCensusIterator.hasNext()) {
 				numOfEntries++;
 				IndiaCensusCSV censusData = IndiaCensusIterator.next();
+				if((censusData.state == null)||(censusData.population == 0)||(censusData.areaInSqkm == 0)||(censusData.densityPerSqKm == 0)) {
+					throw new IncorrectCSVFile("Please correct the details in csv file");
+				}
 			}
 			return numOfEntries;
 		} catch (IOException e) {
 			throw new IncorrectCSVFile("Please provide the correct csv File");
+		}
+		catch(IllegalStateException e) {
+			throw new IncorrectCSVFile("please provide the correct details in file");
 		}
 	}
 
