@@ -18,7 +18,7 @@ public class StateCensusAnalyserTest {
 	}
 
 	@Test
-	public void givenIncorrectStateCensusCSVCheckforDelimitershouldReturnCustomException() {
+	public void givenIncorrectStateCensusCSVCheckforHeaderhouldReturnCustomException() {
 		String censusFile = "./incorrectStateCensus.csv";
 		StateCensusAnalyser stateCensusAnalyser = new StateCensusAnalyser();
 		int numOfEntries = -1;
