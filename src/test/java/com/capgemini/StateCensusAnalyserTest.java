@@ -18,7 +18,7 @@ public class StateCensusAnalyserTest {
 	}
 
 	@Test
-	public void givenIncorrectStateCensusCSVCheckToEnsureTheNumberOfRecords() {
+	public void givenIncorrectStateCensusCSVCheckforCustomException() {
 		String censusFile = "./tateCensus.csv";
 		StateCensusAnalyser stateCensusAnalyser = new StateCensusAnalyser();
 		int numOfEntries = -1;
@@ -30,4 +30,5 @@ public class StateCensusAnalyserTest {
 		}
 		Assert.assertEquals(-1, numOfEntries);
 	}
+
 }
