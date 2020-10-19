@@ -8,7 +8,7 @@ import java.util.Iterator;
 import com.opencsv.bean.*;
 
 public class StateCensusAnalyser {
-	public int loadCSV(String filePath) {
+	public int loadCSV(String filePath) throws IncorrectCSVFile {
 		try {
 			Reader reader = Files.newBufferedReader(Paths.get(filePath));
 			CsvToBeanBuilder<IndiaCensusCSV> csvToBeanBuilder = new CsvToBeanBuilder<IndiaCensusCSV>(reader);
@@ -23,14 +23,17 @@ public class StateCensusAnalyser {
 			}
 			return numOfEntries;
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new IncorrectCSVFile("Please provide the correct csv File");
 		}
-		return 0;
 	}
 
 	public static void main(String[] args) {
 		String stateCensusFile = "./stateCensus.csv";
 		StateCensusAnalyser stateCensusAnalyser = new StateCensusAnalyser();
-		System.out.println(stateCensusAnalyser.loadCSV(stateCensusFile));
+		try {
+			System.out.println(stateCensusAnalyser.loadCSV(stateCensusFile));
+		} catch (IncorrectCSVFile e) {
+			e.printStackTrace();
+		}
 	}
 }
