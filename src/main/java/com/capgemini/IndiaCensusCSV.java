@@ -1,4 +1,5 @@
 package com.capgemini;
+
 import com.opencsv.bean.*;
 
 public class IndiaCensusCSV {
@@ -7,7 +8,11 @@ public class IndiaCensusCSV {
 	@CsvBindByName
 	int population;
 	@CsvBindByName
-	int areaPerSqkm;
+	int areaInSqkm;
 	@CsvBindByName
 	int densityPerSqKm;
+
+	public String toString() {
+		return state + " " + population + " " + areaInSqkm + " " + densityPerSqKm;
+	}
 }
