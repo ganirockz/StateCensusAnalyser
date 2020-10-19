@@ -26,4 +26,11 @@ dependencies {
 
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
+    
+}
+dependencies{
+	compile "com.opencsv:opencsv:4.0"
+}
+dependencies{
+	compile "com.google.code.gson:gson:2.2.+"
 }
