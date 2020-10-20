@@ -6,12 +6,22 @@ import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.stream.StreamSupport;
 
+import com.opencsv.CSVReader;
 import com.opencsv.bean.*;
 
 public class CSVStates {
 	public int loadCSV(String filePath) throws IncorrectCSVFile {
 		try {
 			Reader reader = Files.newBufferedReader(Paths.get(filePath));
+			Reader fileReader = Files.newBufferedReader(Paths.get(filePath));
+			CSVReader csvReader = new CSVReader(fileReader);
+			String[] nextRow = csvReader.readNext();
+			if (!((nextRow[0].equals("SrNo")) && (nextRow[1].equals("State Name")
+					&& (nextRow[2].equals("TIN") && (nextRow[3].equals("StateCode")))))) {
+				csvReader.close();
+				throw new IncorrectCSVFile("Incorrect header");
+			}
+			fileReader.close();
 			CsvToBeanBuilder<StateCodeCSV> csvToBeanBuilder = new CsvToBeanBuilder<StateCodeCSV>(reader);
 			csvToBeanBuilder.withType(StateCodeCSV.class);
 			csvToBeanBuilder.withIgnoreLeadingWhiteSpace(true);
@@ -22,7 +32,7 @@ public class CSVStates {
 			while (stateCodeIterator.hasNext()) {
 				numOfEntries++;
 				StateCodeCSV stateCodeData = stateCodeIterator.next();
-				if ((stateCodeData.SrNo == 0) || (stateCodeData.StateName == null) || (stateCodeData.TIN == 0)
+				if ((stateCodeData.SrNo < 0) || (stateCodeData.StateName == null) || (stateCodeData.TIN < 0)
 						|| (stateCodeData.StateCode == null)) {
 					throw new IncorrectCSVFile("Please correct the details in csv file");
 				}

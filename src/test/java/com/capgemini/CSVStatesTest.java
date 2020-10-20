@@ -5,7 +5,7 @@ import org.junit.*;
 public class CSVStatesTest {
 	@Test
 	public void givenStateCensusCSVCheckToEnsureTheNumberOfRecords() {
-		String censusFile = "./incorrectStatCensus.csv";
+		String censusFile = "./incorrectStateCensus.csv";
 		CSVStates stateCodeAnalyser = new CSVStates();
 		int numOfEntries = -1;
 		try {
