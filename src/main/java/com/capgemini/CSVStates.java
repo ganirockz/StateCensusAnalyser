@@ -4,6 +4,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Iterator;
+import java.util.stream.StreamSupport;
 
 import com.opencsv.bean.*;
 
@@ -16,14 +17,13 @@ public class CSVStates {
 			csvToBeanBuilder.withIgnoreLeadingWhiteSpace(true);
 			CsvToBean<StateCodeCSV> csvToBean = csvToBeanBuilder.build();
 			Iterator<StateCodeCSV> stateCodeIterator = csvToBean.iterator();
-			int numOfEntries = 0;
-			while (stateCodeIterator.hasNext()) {
-				numOfEntries++;
-				StateCodeCSV codeData = stateCodeIterator.next();
-			}
+			Iterable<StateCodeCSV> csvIterable = () -> stateCodeIterator;
+			int numOfEntries = (int) StreamSupport.stream(csvIterable.spliterator(), false).count();
 			return numOfEntries;
 		} catch (IOException e) {
 			throw new IncorrectCSVFile("The csv file is incorrect");
+		} catch (IllegalStateException e) {
+			throw new IncorrectCSVFile("The csv file is doesn't have required data");
 		}
 	}
 
