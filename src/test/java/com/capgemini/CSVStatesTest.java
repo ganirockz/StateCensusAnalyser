@@ -5,9 +5,14 @@ import org.junit.*;
 public class CSVStatesTest {
 	@Test
 	public void givenStateCensusCSVCheckToEnsureTheNumberOfRecords() {
-		String censusFile = "./stateCode.csv";
+		String censusFile = "./incorrectStatCensus.csv";
 		CSVStates stateCodeAnalyser = new CSVStates();
-		int numOfEntries = stateCodeAnalyser.loadCSV(censusFile);
-		Assert.assertEquals(37, numOfEntries);
+		int numOfEntries = -1;
+		try {
+			numOfEntries = stateCodeAnalyser.loadCSV(censusFile);
+		} catch (IncorrectCSVFile e) {
+			e.printStackTrace();
+		}
+		Assert.assertEquals(-1, numOfEntries);
 	}
 }

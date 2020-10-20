@@ -8,7 +8,7 @@ import java.util.Iterator;
 import com.opencsv.bean.*;
 
 public class CSVStates {
-	public int loadCSV(String filePath) {
+	public int loadCSV(String filePath) throws IncorrectCSVFile {
 		try {
 			Reader reader = Files.newBufferedReader(Paths.get(filePath));
 			CsvToBeanBuilder<StateCodeCSV> csvToBeanBuilder = new CsvToBeanBuilder<StateCodeCSV>(reader);
@@ -23,15 +23,19 @@ public class CSVStates {
 			}
 			return numOfEntries;
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new IncorrectCSVFile("The csv file is incorrect");
 		}
-		return 0;
 	}
 
 	public static void main(String[] args) {
 		String stateCodeFile = "./stateCode.csv";
 		CSVStates csvStates = new CSVStates();
-		System.out.println(csvStates.loadCSV(stateCodeFile));
+		try {
+			System.out.println(csvStates.loadCSV(stateCodeFile));
+		} catch (IncorrectCSVFile e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
