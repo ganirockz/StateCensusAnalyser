@@ -7,7 +7,7 @@ import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 
 public class OpenCSVBuilder implements ICSVBuilder {
-	public <E> Iterator<E> getCSVFileIterator(Reader reader, Class<E> csvClass) throws IncorrectCSVFileException {
+	public <E> Iterator<E> getCSVFileIterator(Reader reader, Class<E> csvClass) throws IncorrectCSVException {
 		try {
 			CsvToBeanBuilder<E> csvToBeanBuilder = new CsvToBeanBuilder<E>(reader);
 			csvToBeanBuilder.withType(csvClass);
@@ -15,7 +15,7 @@ public class OpenCSVBuilder implements ICSVBuilder {
 			CsvToBean<E> csvToBean = csvToBeanBuilder.build();
 			return csvToBean.iterator();
 		} catch (IllegalStateException e) {
-			throw new IncorrectCSVFileException("Unable to Parse");
+			throw new IncorrectCSVException("Unable to Parse");
 		}
 	}
 }

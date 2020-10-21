@@ -10,7 +10,7 @@ public class StateCensusAnalyserTest {
 		int numOfEntries = -1;
 		try {
 			numOfEntries = stateCensusAnalyser.loadIndiaCensusCSV(censusFile);
-		} catch (IncorrectCSVFileException e) {
+		} catch (IncorrectCSVException e) {
 			e.printStackTrace();
 		}
 		Assert.assertEquals(29, numOfEntries);
@@ -23,7 +23,7 @@ public class StateCensusAnalyserTest {
 		int numOfEntries = -1;
 		try {
 			numOfEntries = stateCensusAnalyser.loadStateCodeCSV(censusFile);
-		} catch (IncorrectCSVFileException e) {
+		} catch (IncorrectCSVException e) {
 			e.printStackTrace();
 		}
 		Assert.assertEquals(-1, numOfEntries);

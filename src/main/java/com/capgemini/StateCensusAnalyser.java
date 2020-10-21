@@ -11,7 +11,7 @@ import com.opencsv.CSVReader;
 import com.opencsv.bean.*;
 
 public class StateCensusAnalyser {
-	public int loadIndiaCensusCSV(String filePath) throws IncorrectCSVFileException {
+	public int loadIndiaCensusCSV(String filePath) throws IncorrectCSVException {
 		try {
 			Reader reader = Files.newBufferedReader(Paths.get(filePath));
 			Reader fileReader = Files.newBufferedReader(Paths.get(filePath));
@@ -19,7 +19,7 @@ public class StateCensusAnalyser {
 			String[] nextRow = csvReader.readNext();
 			if (!((nextRow[0].equals("State")) && (nextRow[1].equals("Population")
 					&& (nextRow[2].equals("AreaInSqKm") && (nextRow[3].equals("DensityPerSqKm")))))) {
-				throw new IncorrectCSVFileException("Incorrect header");
+				throw new IncorrectCSVException("Incorrect header");
 			}
 			fileReader.close();
 			csvReader.close();
@@ -27,11 +27,11 @@ public class StateCensusAnalyser {
 			Iterator<IndiaCensusCSV> IndiaCensusIterator = csvBuilder.getCSVFileIterator(reader, IndiaCensusCSV.class);
 			return this.getCount(IndiaCensusIterator);
 		} catch (IOException e) {
-			throw new IncorrectCSVFileException("Please provide the correct csv File");
+			throw new IncorrectCSVException("Please provide the correct csv File");
 		}
 	}
 
-	public int loadStateCodeCSV(String filePath) throws IncorrectCSVFileException {
+	public int loadStateCodeCSV(String filePath) throws IncorrectCSVException {
 		try {
 			Reader reader = Files.newBufferedReader(Paths.get(filePath));
 			Reader fileReader = Files.newBufferedReader(Paths.get(filePath));
@@ -40,7 +40,7 @@ public class StateCensusAnalyser {
 			if (!((nextRow[0].equals("SrNo")) && (nextRow[1].equals("State Name")
 					&& (nextRow[2].equals("TIN") && (nextRow[3].equals("StateCode")))))) {
 				csvReader.close();
-				throw new IncorrectCSVFileException("Incorrect header");
+				throw new IncorrectCSVException("Incorrect header");
 			}
 			fileReader.close();
 			csvReader.close();
@@ -48,7 +48,7 @@ public class StateCensusAnalyser {
 			Iterator<StateCodeCSV> stateCodeIterator = csvBuilder.getCSVFileIterator(reader, StateCodeCSV.class);
 			return this.getCount(stateCodeIterator);
 		} catch (IOException e) {
-			throw new IncorrectCSVFileException("The csv file is incorrect");
+			throw new IncorrectCSVException("The csv file is incorrect");
 		}
 	}
 
