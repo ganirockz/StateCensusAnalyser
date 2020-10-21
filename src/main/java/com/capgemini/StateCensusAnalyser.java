@@ -4,12 +4,14 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Iterator;
+import java.util.List;
+import java.util.stream.StreamSupport;
 
 import com.opencsv.CSVReader;
 import com.opencsv.bean.*;
 
 public class StateCensusAnalyser {
-	public int loadCSV(String filePath) throws IncorrectCSVFile {
+	public int loadIndiaCensusCSV(String filePath) throws IncorrectCSVFileException {
 		try {
 			Reader reader = Files.newBufferedReader(Paths.get(filePath));
 			Reader fileReader = Files.newBufferedReader(Paths.get(filePath));
@@ -17,40 +19,50 @@ public class StateCensusAnalyser {
 			String[] nextRow = csvReader.readNext();
 			if (!((nextRow[0].equals("State")) && (nextRow[1].equals("Population")
 					&& (nextRow[2].equals("AreaInSqKm") && (nextRow[3].equals("DensityPerSqKm")))))) {
-				throw new IncorrectCSVFile("Incorrect header");
+				throw new IncorrectCSVFileException("Incorrect header");
 			}
 			fileReader.close();
 			csvReader.close();
-			CsvToBeanBuilder<IndiaCensusCSV> csvToBeanBuilder = new CsvToBeanBuilder<IndiaCensusCSV>(reader);
-			csvToBeanBuilder.withType(IndiaCensusCSV.class);
-			csvToBeanBuilder.withIgnoreLeadingWhiteSpace(true);
-			CsvToBean<IndiaCensusCSV> csvToBean = csvToBeanBuilder.build();
-			Iterator<IndiaCensusCSV> IndiaCensusIterator = csvToBean.iterator();
-			int numOfEntries = 0;
-			while (IndiaCensusIterator.hasNext()) {
-				numOfEntries++;
-				IndiaCensusCSV censusData = IndiaCensusIterator.next();
-				if ((censusData.state == null) || (censusData.population == 0) || (censusData.areaInSqkm == 0)
-						|| (censusData.densityPerSqKm == 0)) {
-					throw new IncorrectCSVFile("Please correct the details in csv file");
-				}
-			}
+			Iterator<IndiaCensusCSV> IndiaCensusIterator = this.getCSVFileIterator(reader, IndiaCensusCSV.class);
+			Iterable<IndiaCensusCSV> csvIterator = () -> IndiaCensusIterator;
+			int numOfEntries = (int) StreamSupport.stream(csvIterator.spliterator(), false).count();
 			reader.close();
 			return numOfEntries;
 		} catch (IOException e) {
-			throw new IncorrectCSVFile("Please provide the correct csv File");
-		} catch (IllegalStateException e) {
-			throw new IncorrectCSVFile("please provide the correct details in file");
+			throw new IncorrectCSVFileException("Please provide the correct csv File");
 		}
 	}
 
-	public static void main(String[] args) {
-		String stateCensusFile = "./stateCensus.csv";
-		StateCensusAnalyser stateCensusAnalyser = new StateCensusAnalyser();
+	public int loadStateCodeCSV(String filePath) throws IncorrectCSVFileException {
 		try {
-			System.out.println(stateCensusAnalyser.loadCSV(stateCensusFile));
-		} catch (IncorrectCSVFile e) {
-			e.printStackTrace();
+			Reader reader = Files.newBufferedReader(Paths.get(filePath));
+			Reader fileReader = Files.newBufferedReader(Paths.get(filePath));
+			CSVReader csvReader = new CSVReader(fileReader);
+			String[] nextRow = csvReader.readNext();
+			if (!((nextRow[0].equals("SrNo")) && (nextRow[1].equals("State Name")
+					&& (nextRow[2].equals("TIN") && (nextRow[3].equals("StateCode")))))) {
+				csvReader.close();
+				throw new IncorrectCSVFileException("Incorrect header");
+			}
+			fileReader.close();
+			Iterator<StateCodeCSV> stateCodeIterator = this.getCSVFileIterator(reader, StateCodeCSV.class);
+			Iterable<StateCodeCSV> csvIterable = () -> stateCodeIterator;
+			int numOfEntries = (int) StreamSupport.stream(csvIterable.spliterator(), false).count();
+			return numOfEntries;
+		} catch (IOException e) {
+			throw new IncorrectCSVFileException("The csv file is incorrect");
+		}
+	}
+
+	private <E> Iterator<E> getCSVFileIterator(Reader reader, Class<E> csvClass) throws IncorrectCSVFileException {
+		try {
+			CsvToBeanBuilder<E> csvToBeanBuilder = new CsvToBeanBuilder<E>(reader);
+			csvToBeanBuilder.withType(csvClass);
+			csvToBeanBuilder.withIgnoreLeadingWhiteSpace(true);
+			CsvToBean<E> csvToBean = csvToBeanBuilder.build();
+			return csvToBean.iterator();
+		} catch (IllegalStateException e) {
+			throw new IncorrectCSVFileException("Unable to Parse");
 		}
 	}
 }
