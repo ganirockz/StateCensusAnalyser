@@ -10,7 +10,7 @@ public class CSVStatesTest {
 		int numOfEntries = -1;
 		try {
 			numOfEntries = stateCodeAnalyser.loadStateCodeCSV(censusFile);
-		} catch (IncorrectCSVFileException e) {
+		} catch (IncorrectCSVException e) {
 			e.printStackTrace();
 		}
 		Assert.assertEquals(37, numOfEntries);
