@@ -24,10 +24,7 @@ public class StateCensusAnalyser {
 			fileReader.close();
 			csvReader.close();
 			Iterator<IndiaCensusCSV> IndiaCensusIterator = this.getCSVFileIterator(reader, IndiaCensusCSV.class);
-			Iterable<IndiaCensusCSV> csvIterator = () -> IndiaCensusIterator;
-			int numOfEntries = (int) StreamSupport.stream(csvIterator.spliterator(), false).count();
-			reader.close();
-			return numOfEntries;
+			return this.getCount(IndiaCensusIterator);
 		} catch (IOException e) {
 			throw new IncorrectCSVFileException("Please provide the correct csv File");
 		}
@@ -46,12 +43,16 @@ public class StateCensusAnalyser {
 			}
 			fileReader.close();
 			Iterator<StateCodeCSV> stateCodeIterator = this.getCSVFileIterator(reader, StateCodeCSV.class);
-			Iterable<StateCodeCSV> csvIterable = () -> stateCodeIterator;
-			int numOfEntries = (int) StreamSupport.stream(csvIterable.spliterator(), false).count();
-			return numOfEntries;
+			return this.getCount(stateCodeIterator);
 		} catch (IOException e) {
 			throw new IncorrectCSVFileException("The csv file is incorrect");
 		}
+	}
+
+	private <E> int getCount(Iterator<E> iterator) {
+		Iterable<E> csvIterable = () -> iterator;
+		int numOfEntries = (int) StreamSupport.stream(csvIterable.spliterator(), false).count();
+		return numOfEntries;
 	}
 
 	private <E> Iterator<E> getCSVFileIterator(Reader reader, Class<E> csvClass) throws IncorrectCSVFileException {
