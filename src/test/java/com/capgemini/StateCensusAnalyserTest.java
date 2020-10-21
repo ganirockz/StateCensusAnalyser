@@ -13,7 +13,7 @@ public class StateCensusAnalyserTest {
 		} catch (IncorrectCSVException e) {
 			e.printStackTrace();
 		}
-		Assert.assertEquals(29, numOfEntries);
+		Assert.assertEquals(30, numOfEntries);
 	}
 
 	@Test
