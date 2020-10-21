@@ -23,7 +23,8 @@ public class StateCensusAnalyser {
 			}
 			fileReader.close();
 			csvReader.close();
-			Iterator<IndiaCensusCSV> IndiaCensusIterator = this.getCSVFileIterator(reader, IndiaCensusCSV.class);
+			Iterator<IndiaCensusCSV> IndiaCensusIterator = new OpenCSVBuilder().getCSVFileIterator(reader,
+					IndiaCensusCSV.class);
 			return this.getCount(IndiaCensusIterator);
 		} catch (IOException e) {
 			throw new IncorrectCSVFileException("Please provide the correct csv File");
@@ -42,7 +43,9 @@ public class StateCensusAnalyser {
 				throw new IncorrectCSVFileException("Incorrect header");
 			}
 			fileReader.close();
-			Iterator<StateCodeCSV> stateCodeIterator = this.getCSVFileIterator(reader, StateCodeCSV.class);
+			csvReader.close();
+			Iterator<StateCodeCSV> stateCodeIterator = new OpenCSVBuilder().getCSVFileIterator(reader,
+					StateCodeCSV.class);
 			return this.getCount(stateCodeIterator);
 		} catch (IOException e) {
 			throw new IncorrectCSVFileException("The csv file is incorrect");
@@ -53,17 +56,5 @@ public class StateCensusAnalyser {
 		Iterable<E> csvIterable = () -> iterator;
 		int numOfEntries = (int) StreamSupport.stream(csvIterable.spliterator(), false).count();
 		return numOfEntries;
-	}
-
-	private <E> Iterator<E> getCSVFileIterator(Reader reader, Class<E> csvClass) throws IncorrectCSVFileException {
-		try {
-			CsvToBeanBuilder<E> csvToBeanBuilder = new CsvToBeanBuilder<E>(reader);
-			csvToBeanBuilder.withType(csvClass);
-			csvToBeanBuilder.withIgnoreLeadingWhiteSpace(true);
-			CsvToBean<E> csvToBean = csvToBeanBuilder.build();
-			return csvToBean.iterator();
-		} catch (IllegalStateException e) {
-			throw new IncorrectCSVFileException("Unable to Parse");
-		}
 	}
 }
