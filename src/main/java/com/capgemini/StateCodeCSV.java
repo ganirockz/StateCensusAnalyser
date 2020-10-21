@@ -11,4 +11,9 @@ public class StateCodeCSV {
 	public int TIN;
 	@CsvBindByName
 	public String StateCode;
+
+	@Override
+	public String toString() {
+		return SrNo + " " + StateName + " " + TIN + " " + StateCode;
+	}
 }
