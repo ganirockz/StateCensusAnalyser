@@ -13,6 +13,6 @@ public class CSVStatesTest {
 		} catch (IncorrectCSVException e) {
 			e.printStackTrace();
 		}
-		Assert.assertEquals(37, numOfEntries);
+		Assert.assertEquals(38, numOfEntries);
 	}
 }
