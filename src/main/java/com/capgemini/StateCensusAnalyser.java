@@ -23,8 +23,8 @@ public class StateCensusAnalyser {
 			}
 			fileReader.close();
 			csvReader.close();
-			Iterator<IndiaCensusCSV> IndiaCensusIterator = new OpenCSVBuilder().getCSVFileIterator(reader,
-					IndiaCensusCSV.class);
+			ICSVBuilder csvBuilder = CSVBuildFactory.createCSVBuilder();
+			Iterator<IndiaCensusCSV> IndiaCensusIterator = csvBuilder.getCSVFileIterator(reader, IndiaCensusCSV.class);
 			return this.getCount(IndiaCensusIterator);
 		} catch (IOException e) {
 			throw new IncorrectCSVFileException("Please provide the correct csv File");
@@ -44,8 +44,8 @@ public class StateCensusAnalyser {
 			}
 			fileReader.close();
 			csvReader.close();
-			Iterator<StateCodeCSV> stateCodeIterator = new OpenCSVBuilder().getCSVFileIterator(reader,
-					StateCodeCSV.class);
+			ICSVBuilder csvBuilder = CSVBuildFactory.createCSVBuilder();
+			Iterator<StateCodeCSV> stateCodeIterator = csvBuilder.getCSVFileIterator(reader, StateCodeCSV.class);
 			return this.getCount(stateCodeIterator);
 		} catch (IOException e) {
 			throw new IncorrectCSVFileException("The csv file is incorrect");
