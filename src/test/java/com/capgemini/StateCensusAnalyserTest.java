@@ -2,6 +2,8 @@ package com.capgemini;
 
 import org.junit.*;
 
+import com.google.gson.Gson;
+
 public class StateCensusAnalyserTest {
 	@Test
 	public void givenStateCensusCSVCheckToEnsureTheNumberOfRecords() {
@@ -13,7 +15,7 @@ public class StateCensusAnalyserTest {
 		} catch (IncorrectCSVException e) {
 			e.printStackTrace();
 		}
-		Assert.assertEquals(30, numOfEntries);
+		Assert.assertEquals(29, numOfEntries);
 	}
 
 	@Test
