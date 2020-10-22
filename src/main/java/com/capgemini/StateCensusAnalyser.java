@@ -3,14 +3,18 @@ package com.capgemini;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.StreamSupport;
 
+import com.google.gson.Gson;
 import com.opencsv.CSVReader;
 import com.opencsv.bean.*;
 
 public class StateCensusAnalyser {
+	List<IndiaCensusCSV> censusList = null;
+
 	public int loadIndiaCensusCSV(String filePath) throws IncorrectCSVException {
 		try {
 			Reader reader = Files.newBufferedReader(Paths.get(filePath));
@@ -24,8 +28,8 @@ public class StateCensusAnalyser {
 			fileReader.close();
 			csvReader.close();
 			ICSVBuilder csvBuilder = CSVBuildFactory.createCSVBuilder();
-			Iterator<IndiaCensusCSV> IndiaCensusIterator = csvBuilder.getCSVFileIterator(reader, IndiaCensusCSV.class);
-			return this.getCount(IndiaCensusIterator);
+			censusList = csvBuilder.getCSVFileList(reader, IndiaCensusCSV.class);
+			return censusList.size();
 		} catch (IOException e) {
 			throw new IncorrectCSVException("Please provide the correct csv File");
 		}
@@ -45,8 +49,8 @@ public class StateCensusAnalyser {
 			fileReader.close();
 			csvReader.close();
 			ICSVBuilder csvBuilder = CSVBuildFactory.createCSVBuilder();
-			Iterator<StateCodeCSV> stateCodeIterator = csvBuilder.getCSVFileIterator(reader, StateCodeCSV.class);
-			return this.getCount(stateCodeIterator);
+			censusList = csvBuilder.getCSVFileList(reader, StateCodeCSV.class);
+			return censusList.size();
 		} catch (IOException e) {
 			throw new IncorrectCSVException("The csv file is incorrect");
 		}
