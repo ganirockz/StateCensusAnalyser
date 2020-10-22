@@ -61,4 +61,27 @@ public class StateCensusAnalyser {
 		int numOfEntries = (int) StreamSupport.stream(csvIterable.spliterator(), false).count();
 		return numOfEntries;
 	}
+
+	public String getStateWiseSortedCensusData() throws IncorrectCSVException {
+		if (censusList == null || censusList.size() == 0) {
+			throw new IncorrectCSVException("No Census Data");
+		}
+		Comparator<IndiaCensusCSV> censusComparator = Comparator.comparing(census -> census.state);
+		this.sort(censusList, censusComparator);
+		String json = new Gson().toJson(censusList);
+		return json;
+	}
+
+	private void sort(List<IndiaCensusCSV> censusList, Comparator<IndiaCensusCSV> censusComparator) {
+		for (int i = 0; i < censusList.size() - 1; i++) {
+			for (int j = 0; j < censusList.size() - 1; j++) {
+				IndiaCensusCSV census1 = censusList.get(j);
+				IndiaCensusCSV census2 = censusList.get(j + 1);
+				if (censusComparator.compare(census1, census2) > 0) {
+					censusList.set(j, census2);
+					censusList.set(j + 1, census1);
+				}
+			}
+		}
+	}
 }
