@@ -73,6 +73,16 @@ public class StateCensusAnalyser {
 		return json;
 	}
 
+	public String getPopulationWiseSortedCensusData() throws IncorrectCSVException {
+		if (censusList == null || censusList.size() == 0) {
+			throw new IncorrectCSVException("No Census Data");
+		}
+		Comparator<IndiaCensusCSV> censusComparator = Comparator.comparing(census -> census.population);
+		this.reverseSort(censusList, censusComparator);
+		String json = new Gson().toJson(censusList);
+		return json;
+	}
+
 	public String getStateCodeWiseSortedCensusData() throws IncorrectCSVException {
 		if (stateCodeList == null || stateCodeList.size() == 0) {
 			throw new IncorrectCSVException("No state Code Data");
@@ -89,6 +99,19 @@ public class StateCensusAnalyser {
 				IndiaCensusCSV census1 = list.get(j);
 				IndiaCensusCSV census2 = list.get(j + 1);
 				if (censusComparator.compare(census1, census2) > 0) {
+					list.set(j, census2);
+					list.set(j + 1, census1);
+				}
+			}
+		}
+	}
+
+	private void reverseSort(List<IndiaCensusCSV> list, Comparator<IndiaCensusCSV> censusComparator) {
+		for (int i = 0; i < list.size() - 1; i++) {
+			for (int j = 0; j < list.size() - 1; j++) {
+				IndiaCensusCSV census1 = list.get(j);
+				IndiaCensusCSV census2 = list.get(j + 1);
+				if (censusComparator.compare(census1, census2) < 0) {
 					list.set(j, census2);
 					list.set(j + 1, census1);
 				}
