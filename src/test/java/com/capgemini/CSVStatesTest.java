@@ -2,6 +2,8 @@ package com.capgemini;
 
 import org.junit.*;
 
+import com.google.gson.Gson;
+
 public class CSVStatesTest {
 	@Test
 	public void givenStateCensusCSVCheckToEnsureTheNumberOfRecords() {
@@ -13,6 +15,22 @@ public class CSVStatesTest {
 		} catch (IncorrectCSVException e) {
 			e.printStackTrace();
 		}
-		Assert.assertEquals(38, numOfEntries);
+		Assert.assertEquals(37, numOfEntries);
+	}
+
+	@Test
+	public void givenStateCodeData_WhenSortedOnState_ShouldReturnSortedResult() {
+		String censusFile = "./stateCode.csv";
+		StateCensusAnalyser censusAnalyser = new StateCensusAnalyser();
+		String sortedData = null;
+		try {
+			int numOfRecords = censusAnalyser.loadStateCodeCSV(censusFile);
+			sortedData = censusAnalyser.getStateCodeWiseSortedCensusData();
+		} catch (IncorrectCSVException e) {
+			e.printStackTrace();
+		}
+		System.out.println(sortedData);
+		StateCodeCSV[] censusCsv = new Gson().fromJson(sortedData, StateCodeCSV[].class);
+		Assert.assertEquals("AD", censusCsv[0].StateCode);
 	}
 }
